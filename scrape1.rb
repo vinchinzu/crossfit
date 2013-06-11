@@ -1,27 +1,34 @@
 require 'nokogiri'
 require 'open-uri'
 
-athlete = [34796,47661,163784]
-url= "http://games.crossfit.com/athlete/"
+#athlete = [34796,47661,163784]
+#url= "http://games.crossfit.com/athlete/"
 
-output = File.open( "data.yml", "w" )
+sf = File.open("data/f_d.txt").readlines.each {|x| p x}
+sf.each {|x| x.gsub!(/\n/,"")}
 
-athlete.each do |num|
 
-list = "#{url}#{num}"
-doc = Nokogiri::HTML(open(list))
-#rows = page.css('td')
+output = File.open( "list.csv", "w" )
 
-doc.css('#page-title').each do |x|
+sf.each do |num|
+
+d = Array.new
+#list = "#{url}#{num}"
+
+  doc = Nokogiri::HTML(open(num))
+  #rows = page.css('td')
+   d << num
+   doc.css('#page-title').map do |x|
    puts x.content
-   output << x.content
-end
+   d << x.content
+   end
 
-doc.css('dd').each{|x| output<< x.content}
+doc.css('dd').map{|x| d << x.content}
 
-doc.css('td').each{|x| output<< x.content}
+doc.css('td').map{|x| d << x.content}
 
-doc.css('div.content.clearfix h4').each{|x| output<< x.content}
+doc.css('div.content.clearfix h4').map{|x| d << x.content}
 
 
+output << d
 end
