@@ -1,14 +1,13 @@
 require 'nokogiri'
 require 'open-uri'
+require 'csv'
 
-#athlete = [34796,47661,163784]
-#url= "http://games.crossfit.com/athlete/"
 
 sf = File.open("data/f_d.txt").readlines.each {|x| p x}
 sf.each {|x| x.gsub!(/\n/,"")}
 
 
-output = File.open( "list.csv", "w" )
+CSV.open("db.csv","w") do |csv|
 
 sf.each do |num|
 
@@ -30,5 +29,8 @@ doc.css('td').map{|x| d << x.content}
 doc.css('div.content.clearfix h4').map{|x| d << x.content}
 
 
-output << d
+csv << d
+
+end
+
 end
